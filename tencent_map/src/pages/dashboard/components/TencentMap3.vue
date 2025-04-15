@@ -45,10 +45,40 @@ function initMap() {
 
     const points = item.grid_list?.map((area, index) => {
       console.log(area)
-
+      const pointe_item_left_down = area?.point[0]?.grid_location?.left_down_gcj?.split(",") // 左下
+      const pointe_item_right_upper = area?.point[0]?.grid_location?.right_upper_gcj?.split(",") // 右上
+      const point_path = [
+        new TMap.LatLng(pointe_item_left_down[0], pointe_item_right_upper[1]),
+        new TMap.LatLng(pointe_item_left_down[0], pointe_item_left_down[1]),
+        new TMap.LatLng(pointe_item_right_upper[0], pointe_item_left_down[1]),
+        new TMap.LatLng(pointe_item_right_upper[0], pointe_item_right_upper[1])
+      ]
+      console.log(pointe_item_left_down, pointe_item_right_upper)
+      const polygon_react = new TMap.MultiPolygon({
+        id: `polygon-layer${index}`, // 图层id
+        map: map.value, // 显示多边形图层的底图
+        styles: {
+          // 多边形的相关样式
+          polygon: new TMap.PolygonStyle({
+            color: "rgba(244,136,110,0.5)", // 面填充色
+            showBorder: true, // 是否显示拔起面的边线
+            borderColor: "red" // 边线颜色
+          })
+        },
+        geometries: [
+          {
+            id: `polygon${index}`, // 多边形图形数据的标志信息
+            styleId: `polygon`, // 样式id
+            paths: point_path, // 多边形的位置信息
+            properties: {
+              // 多边形的属性数据
+              title: "polygon"
+            }
+          }
+        ]
+      })
       const pointe_item_center = area?.point[0]?.grid_location?.center_gcj?.split(",")
       console.log(pointe_item_center)
-
       const point_center = new TMap.LatLng(pointe_item_center[0], pointe_item_center[1])
       return {
         id: `marker${index}`,
@@ -90,19 +120,19 @@ function initMap() {
       //   }]
       // })
     })
-    const marker = new TMap.MultiMarker({
-      id: "marker-layer",
-      map: map.value,
-      styles: {
-        marker: new TMap.MarkerStyle({
-          width: 100,
-          height: 100,
-          anchor: { x: 16, y: 32 },
-          src: white_area
-        })
-      },
-      geometries: points
-    })
+    // const marker = new TMap.MultiMarker({
+    //   id: "marker-layer",
+    //   map: map.value,
+    //   styles: {
+    //     marker: new TMap.MarkerStyle({
+    //       width: 100,
+    //       height: 100,
+    //       anchor: { x: 16, y: 32 },
+    //       src: white_area
+    //     })
+    //   },
+    //   geometries: points
+    // })
     // marker.setStyles({ marker: new TMap.MarkerStyle({
     //   width: 70,
     //   height: 70,
