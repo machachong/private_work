@@ -2,7 +2,6 @@
 import dayjs from "dayjs"
 import { onMounted, onUnmounted, ref } from "vue"
 import { getGridBasicinfoApi, getMapAreaApi, getMapAreaDataApi, getPopulationApi } from "../api/index"
-import white_area from "../images/white_area.png"
 
 const mapkeys = ref(["11260"])
 const APP_KEY = "YNDBZ-OWO6Z-QOEXI-7AXSB-HCH4V-6DF6G"
@@ -30,21 +29,23 @@ function initMap() {
     let infoWindow = new TMap.InfoWindow({
       map: map.value,
       position: item.position, // 设置信息框位置
+      offset: { x: 90, y: 0 },
       content: `人流量 - ${populerData.value?.time}：${item?.count}` // 设置信息框内容
     })
     let infoWindow2 = new TMap.InfoWindow({
       map: map.value,
       position: item.position2, // 设置信息框位置
+      offset: { x: 90, y: -70 },
       content: `区域人数 - ${populerData.value?.time}：${populerData.value?.value}` // 设置信息框内容
     })
-    windowObj.value.push({
-      id: item?.id,
-      obj: infoWindow,
-      obj2: infoWindow2
-    })
 
-    const points = item.grid_list?.map((area, index) => {
+    console.log(item.grid_list)
+    const obj3 = []
+    item.grid_list?.forEach((area, index) => {
       console.log(area)
+      const pointe_item_center = area?.point[0]?.grid_location?.center_gcj?.split(",")
+      console.log(pointe_item_center)
+      const point_center = new TMap.LatLng(pointe_item_center[0], pointe_item_center[1])
       const pointe_item_left_down = area?.point[0]?.grid_location?.left_down_gcj?.split(",") // 左下
       const pointe_item_right_upper = area?.point[0]?.grid_location?.right_upper_gcj?.split(",") // 右上
       const point_path = [
@@ -54,6 +55,16 @@ function initMap() {
         new TMap.LatLng(pointe_item_right_upper[0], pointe_item_right_upper[1])
       ]
       console.log(pointe_item_left_down, pointe_item_right_upper)
+      const areaObj = new TMap.InfoWindow({
+        map: map.value,
+        position: point_center, // 设置信息框位置
+        content: `区域人数 - ${area.grid_pop}` // 设置信息框内容
+      })
+      obj3.push({
+        grid_id: area.grid_id,
+        obj: areaObj
+      })
+
       const polygon_react = new TMap.MultiPolygon({
         id: `polygon-layer${index}`, // 图层id
         map: map.value, // 显示多边形图层的底图
@@ -62,7 +73,7 @@ function initMap() {
           polygon: new TMap.PolygonStyle({
             color: "rgba(244,136,110,0.5)", // 面填充色
             showBorder: true, // 是否显示拔起面的边线
-            borderColor: "red" // 边线颜色
+            borderColor: "#fff" // 边线颜色
           })
         },
         geometries: [
@@ -77,17 +88,7 @@ function initMap() {
           }
         ]
       })
-      const pointe_item_center = area?.point[0]?.grid_location?.center_gcj?.split(",")
-      console.log(pointe_item_center)
-      const point_center = new TMap.LatLng(pointe_item_center[0], pointe_item_center[1])
-      return {
-        id: `marker${index}`,
-        position: point_center,
-        styleId: "marker",
-        properties: {
-          title: "marker"
-        }
-      }
+
       // 图片
       // const markerIcon = new qq.maps.MarkerImage(
       //   white_area,
@@ -119,6 +120,12 @@ function initMap() {
       //     radius: 80
       //   }]
       // })
+    })
+    windowObj.value.push({
+      id: item?.id,
+      obj: infoWindow,
+      obj2: infoWindow2,
+      obj3
     })
     // const marker = new TMap.MultiMarker({
     //   id: "marker-layer",
@@ -202,7 +209,7 @@ async function postRequest(id) {
 
       windowP.value.forEach((item) => {
         if (item.id == id) {
-          item.position = new TMap.LatLng(response.data.gravity_center.split(",")[0], response.data.gravity_center.split(",")[1])
+          item.position = new TMap.LatLng(response.data.upper_right.split(",")[0], response.data.upper_right.split(",")[1])
           item.position2 = new TMap.LatLng(response.data.upper_right.split(",")[0], response.data.upper_right.split(",")[1])
         }
       })
@@ -266,6 +273,7 @@ async function getMapAreaData() {
           item.count = thisItem?.grid_list?.reduce((accumulator, currentValue) => {
             return accumulator + currentValue.grid_pop
           }, 0)
+          item.grid_list = thisItem?.grid_list
         })
       } else {
         windowP.value = res?.data?.region_list.map((item) => {
@@ -335,12 +343,18 @@ onMounted(async () => {
     await getMapAreaData()
     windowObj.value.forEach((item) => {
       const getThis = windowP.value?.find(list => list.id == item.id)
-
       item.obj.setContent(`人流量 - ${populerData.value?.time}：${getThis?.count}`)
       item.obj2.setContent(`区域人数 - ${populerData.value?.time}：${populerData.value?.value}`)
+      if (item?.obj3?.length > 0) {
+        item.obj3.forEach((area) => {
+          const findArea = getThis.grid_list?.find(list => list.grid_id == area.grid_id)
+          console.log(area, findArea)
+          area.obj.setContent(`区域人数 - ${findArea.grid_pop}`)
+        })
+      }
     })
     // initMap()
-  }, 5 * 60000)
+  }, 60000)
 })
 
 onUnmounted(() => {
