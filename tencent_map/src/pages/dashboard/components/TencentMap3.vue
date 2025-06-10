@@ -1,7 +1,7 @@
 <script setup>
 import dayjs from "dayjs"
 import { onMounted, onUnmounted, ref } from "vue"
-import { getGridBasicinfoApi, getMapAreaApi, getMapAreaDataApi, getPopulationApi } from "../api/index"
+import { getGridBasicinfoApi, getMapAreaApi, getMapAreaDataApi, getPopulationApi, getMapDataApi } from "../api/index"
 
 const mapkeys = ref(["11260"])
 const APP_KEY = "YNDBZ-OWO6Z-QOEXI-7AXSB-HCH4V-6DF6G"
@@ -11,6 +11,7 @@ const windowP = ref([])
 const windowObj = ref([])
 const setTimer = ref()
 const populerData = ref()
+const mapCountList = ref()
 let cenlat = 0
 let cenlng = 0
 // 多边形数据
@@ -58,7 +59,7 @@ function initMap() {
       const areaObj = new TMap.InfoWindow({
         map: map.value,
         position: point_center, // 设置信息框位置
-        content: `区域人数 - ${area.grid_pop}` // 设置信息框内容
+        content: `网格人数：${area.grid_pop}` // 设置信息框内容
       })
       obj3.push({
         grid_id: area.grid_id,
@@ -325,7 +326,34 @@ async function getGridBasicinfo(params) {
   )
   return res?.data?.grid_list
 }
+const getRankData = async () => {
+  try {
+
+    const res = await getMapDataApi({
+      adcode: "310000",
+      time: getTime(populerData.value?.time),
+      rank_type: 0,
+      key: "YNDBZ-OWO6Z-QOEXI-7AXSB-HCH4V-6DF6G",
+
+    })
+
+    mapCountList.value = res.data?.list?.splice(0, 10)
+    const grid_ids = mapCountList.value?.map(item => item.grid_id)
+    const name_res = await getGridBasicinfo({
+      adcode: "310000",
+      grid_ids,
+      key: "YNDBZ-OWO6Z-QOEXI-7AXSB-HCH4V-6DF6G"
+    })
+    mapCountList.value.forEach((item, index) => {
+      item.grid_name = name_res[index]?.grid_name
+    })
+  } catch (error) {
+    console.log(error);
+
+  }
+}
 onMounted(async () => {
+  getRankData()
   console.log(getPreviousFiveDivisibleTime())
   for (let i in mapkeys.value) {
     await getPopulation(mapkeys.value[i])
@@ -341,6 +369,7 @@ onMounted(async () => {
       await getPopulation(mapkeys.value[i])
     }
     await getMapAreaData()
+    getRankData()
     windowObj.value.forEach((item) => {
       const getThis = windowP.value?.find(list => list.id == item.id)
       item.obj.setContent(`人流量 - ${populerData.value?.time}：${getThis?.count}`)
@@ -349,7 +378,7 @@ onMounted(async () => {
         item.obj3.forEach((area) => {
           const findArea = getThis.grid_list?.find(list => list.grid_id == area.grid_id)
           console.log(area, findArea)
-          area.obj.setContent(`区域人数 - ${findArea.grid_pop}`)
+          area.obj.setContent(`网格人数：${findArea.grid_pop}`)
         })
       }
     })
@@ -363,8 +392,22 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div id="container" />
+  <div id="container">
+
+  </div>
   <div id="info" style="width: 100%; height :500px" />
+  <div class="hot-list">
+    <li >
+      <span class="rank">排名</span>
+      <span  class="name">位置</span>
+      <span class="count">人数</span>
+    </li>
+    <li v-for="(item, index) in mapCountList" :key="index">
+      <span class="rank">{{ item.rank }}</span>
+      <span class="name">{{ item.grid_name }}</span>
+      <span class="count">{{ item.grid_pop }}</span>
+    </li>
+  </div>
 </template>
 
 <style scoped>
@@ -388,5 +431,46 @@ body {
   background: #fff;
   border-radius: 5px;
   padding: 10px;
+}
+</style>
+<style scoped lang="scss">
+.hot-list {
+  position: fixed;
+  left: 120px;
+  top: 120px;
+  width: auto;
+  max-width: 500px;
+  height: auto;
+  background: #fff;
+  padding: 10px 12px;
+  z-index: 9999;
+  li{
+    list-style: none;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid #fff;
+    border-top: 1px solid #ddd;
+    cursor: pointer;
+    
+    &:hover{
+      background-color: rgba(244,136,110,0.4);
+      border: 1px solid rgba(244,136,110,1);
+    }
+    &:first-child{
+      font-weight: bold;
+    }
+    .rank{
+      width: 60px;
+      text-align: center;
+    }
+    .name{
+      flex: 1;
+    }
+    .count{
+      width: 100px;
+      text-align: center;
+    }
+  }
 }
 </style>

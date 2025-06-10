@@ -1,0 +1,4 @@
+.#{$theme-name} {
+  @use "./layouts.scss";
+  @use "./element-plus.scss";
+}
