@@ -5,5 +5,6 @@ export interface MapParamsData {
   key: string;
 }
 export interface DeleteData {
-  id: string | number;
+  companyName?: string | number;
+  companyCode?: string | number;
 }

@@ -6,7 +6,8 @@
                 导出 Excel
             </download-excel> -->
       <el-button @click="handleExport()">导出</el-button>
-      <el-button type="primary" @click="getBidList()">查询</el-button>
+      <!-- <el-button type="primary" @click="getBidList()">查询</el-button> -->
+      <el-button  @click="getCompany()">公司信息</el-button>
     </el-space>
     <el-card style="margin-top: 16px">
       <el-table :data="tableData" :load="loading" border style="width: 100%">
@@ -48,6 +49,10 @@ const columns = [
     value: "bidNumber",
   },
   {
+    label: "项目名称",
+    value: "projectName",
+  },
+  {
     label: "标的金额(万元)",
     value: "bidAmount",
   },
@@ -69,6 +74,7 @@ const handleExport = () => {
     // 转换数据格式
     const ws_data = tableData.value.map((item) => ({
       ID: item.bidNumber,
+      项目名称: item.projectName,
       标的金额: item.bidAmount,
       日期: item.createTime,
     }));
@@ -92,6 +98,13 @@ const handleExport = () => {
     console.error("导出 Excel 失败:", error);
     ElMessage.error("导出失败，请重试！");
   }
+};
+
+const getCompany = (item) => {
+  console.log(item);
+  router.push({
+    path: `/company`,
+  });
 };
 const getBidList = async () => {
   try {

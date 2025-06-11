@@ -31,16 +31,15 @@ export function editCompanyApi(data: Map.MapParamsData) {
 export function deleteCompanyApi(data: Map.DeleteData) {
   return request<any>({
     baseURL: import.meta.env.VITE_BASE_URL_M,
-    url: `/zc-bid/ompany/delete/${data.id}`,
+    url: `/zc-bid/ompany/delete/${data.companyCode}`,
     method: "delete",
   });
 }
-export function getCompanyDetailApi(params: Map.DeleteData) {
+export function getCompanyDetailApi(data: Map.DeleteData) {
   return request<any>({
     baseURL: import.meta.env.VITE_BASE_URL_M,
-    url: `/zc-bid/company/detail`,
+    url: `/zc-bid/company/get/${data.companyCode}`,
     method: "get",
-    params,
   });
 }
 export function getAllCompanyNameApi() {

@@ -6,7 +6,8 @@
                 导出 Excel
             </download-excel> -->
       <el-button @click="handleExport()">导出</el-button>
-      <el-button type="primary" @click="getBidList()">查询</el-button>
+      <!-- <el-button type="primary" @click="getBidList()">查询</el-button> -->
+      <el-button @click="getBid()">投标信息</el-button>
     </el-space>
     <el-card style="margin-top: 16px">
       <el-table :data="tableData" :load="loading" border style="width: 100%">
@@ -15,7 +16,7 @@
             <template v-if="item.value === 'handle'">
               <el-space>
                 <el-text type="primary" style="cursor: pointer" @click="goDetail(row)">查看</el-text>
-                <AddItem @submitOk="getBidList()" :row="row">编辑</AddItem>
+                <AddItem :bokeDict="bokeDict" @submitOk="getBidList()" :row="row">编辑</AddItem>
                 <el-popconfirm title="确定删除吗?" @confirm="handleDelete(row)">
                   <template #reference>
                     <el-text type="danger" style="cursor: pointer">删除</el-text>
@@ -38,22 +39,22 @@ import AddItem from "./components/AddItem.vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 const jsonFields = {
-  ID: "bidNumber",
+  ID: "companyCode",
   标的金额: "bidAmount",
   日期: "createTime",
 };
 const columns = [
   {
     label: "ID",
-    value: "id",
+    value: "companyCode",
   },
   {
     label: "公司名称",
     value: "companyName",
   },
   {
-    label: "更新时间",
-    value: "updateTime",
+    label: "创建日期",
+    value: "createTime",
   },
   {
     label: "操作",
@@ -70,19 +71,26 @@ const getTcdeeopyList = async () => {
   const result = await getIcdeemotListApi({
     codeTypeId: findItem.id,
   });
+  console.log(result);
+
   if (result.status === 0) {
     bokeDict.value = result.data;
   } else {
     bokeDict.value = [];
   }
 };
+const getBid = (item) => {
+  console.log(item);
+  router.push({
+    path: `/list`,
+  });
+};
 const handleExport = () => {
   try {
     // 转换数据格式
     const ws_data = tableData.value.map((item) => ({
-      ID: item.bidNumber,
-      标的金额: item.bidAmount,
-      日期: item.createTime,
+      公司名称: item.companyName,
+      创建日期: item.createTime,
     }));
 
     // 创建工作表
@@ -131,14 +139,14 @@ const handleDelete = async (item) => {
       ElMessage.success("删除成功");
       getBidList();
     }
-  } catch (error) {}
+  } catch (error) { }
 };
 const goDetail = (item) => {
   console.log(item);
   router.push({
     path: `/company/detail`,
     query: {
-      companyName: item.companyName,
+      companyCode: item.companyCode,
     },
   });
 };

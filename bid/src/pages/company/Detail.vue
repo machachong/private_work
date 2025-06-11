@@ -8,16 +8,16 @@
       <el-descriptions style="margin-top: 12px" class="margin-top" :column="1" border label-width="200">
         <el-descriptions-item label="公司名称">{{ tableData?.companyName }}</el-descriptions-item>
         <el-descriptions-item label="证书">
-          <el-tag v-for="item in tableData?.certificates?.split(',')" :key="item">
-            {{ bokeDict.find((boke) => boke.id == item)?.codeItemName }}</el-tag
-          >
+          <el-space>
+            <el-tag v-for="item in tableData?.certificates?.split(',')" :key="item">
+              {{bokeDict.find((boke) => boke.id == item)?.codeItemName}}</el-tag>
+          </el-space>
         </el-descriptions-item>
-        <el-descriptions-item label="净资产总额">{{ tableData?.netAssetsTotal }}</el-descriptions-item>
-        <el-descriptions-item label="资产总额">{{ tableData?.assetsTotal }}</el-descriptions-item>
-        <el-descriptions-item label="净利润">{{ tableData?.netProfit }}</el-descriptions-item>
-        <el-descriptions-item label="营业收入">{{ tableData?.revenue }}</el-descriptions-item>
-        <el-descriptions-item label="所属年份">{{ tableData?.year }}</el-descriptions-item>
       </el-descriptions>
+      <el-table :data="tableData?.financialInfos" border style="width: 100%; margin-top: 16px">
+        <el-table-column v-for="item in columns" :key="item.value" :prop="item.value"
+                         :label="item.label"></el-table-column>
+      </el-table>
     </el-card>
   </div>
 </template>
@@ -30,32 +30,32 @@ import { getCompanyDetailApi, getTcdeeopyListApi, getIcdeemotListApi } from "./a
 import { useRoute, useRouter } from "vue-router";
 const columns = [
   {
-    label: "公司名称",
-    value: "companyName",
+    label: "所属年份",
+    value: "year",
   },
   {
-    label: "标的金额（万元）",
-    value: "bidAmount",
+    label: "净资产总额",
+    value: "netAssetsTotal",
   },
   {
-    label: "预计基准价（万元）",
-    value: "estimatedBasePrice",
+    label: "资产总额",
+    value: "assetsTotal",
   },
   {
-    label: "分值",
-    value: "standardScore",
+    label: "净利润",
+    value: "netProfit",
   },
   {
-    label: "折扣",
-    value: "discount",
+    label: "资产负债率",
+    value: "debtAssetRatio",
   },
   {
-    label: "报价（万元）",
-    value: "quotation",
+    label: "营业收入",
+    value: "revenue",
   },
   {
-    label: "价格得分",
-    value: "priceScore",
+    label: "负债总计",
+    value: "liabilitiesTotal",
   },
 ];
 const route = useRoute();
@@ -114,11 +114,11 @@ const goList = () => {
     path: "/company",
   });
 };
-const getBidList = async (companyName) => {
+const getBidList = async (companyCode) => {
   try {
     loading.value = true;
     const res = await getCompanyDetailApi({
-      companyName,
+      companyCode,
     });
 
     if (res.status === 0) {
@@ -136,8 +136,10 @@ const getBidList = async (companyName) => {
 
 onMounted(() => {
   getTcdeeopyList();
-  if (route.query?.companyName) {
-    getBidList(route.query.companyName);
+  console.log(route);
+
+  if (route.query?.companyCode) {
+    getBidList(route.query.companyCode);
   }
 });
 </script>

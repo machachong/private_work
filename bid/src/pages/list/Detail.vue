@@ -5,6 +5,7 @@
         <el-button @click="goList()">返回</el-button><el-button @click="handleExport()" type="primary">导出</el-button>
       </div>
       <el-descriptions style="margin-top: 12px" class="margin-top" :column="1" border label-width="200">
+        <el-descriptions-item label="项目名称">{{ tableData?.projectName }}</el-descriptions-item>
         <el-descriptions-item label="标的金额（万元）">{{
           tableData?.companyQuoteInfoDTOS[0].bidAmount
         }}</el-descriptions-item>

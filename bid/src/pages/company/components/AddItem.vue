@@ -1,36 +1,45 @@
 <template>
-  <el-button type="primary" @click="handleOpen()" v-if="!row?.bidNumber">
+  <el-button type="primary" @click="handleOpen()" v-if="!row?.companyCode">
     <slot></slot>
   </el-button>
   <el-text v-else type="primary" style="cursor: pointer" @click="handleOpen()">
     <slot></slot>
   </el-text>
 
-  <el-dialog v-model="visible" destroy-on-close :title="row?.bidNumber ? '编辑' : '添加'" width="800px" append-to-body>
+  <el-dialog v-model="visible" destroy-on-close :title="row?.companyCode ? '编辑' : '添加'" width="800px" append-to-body>
     <el-form v-model="formData" label-width="100px">
       <el-form-item label="公司名称">
         <el-input v-model="formData.companyName" placeholder="请输入" clearable></el-input>
       </el-form-item>
       <el-form-item label="证书">
         <el-select v-model="formData.certificates" multiple collapse-tags placeholder="请选择">
-          <el-option v-for="item in bokeDict" :key="item.id" :label="item.codeItemName" :value="item.id" />
+          <el-option v-for="item in bokeDict" :key="item.codeTypeId" :label="item.codeItemName"
+                     :value="item.codeTypeId" />
         </el-select>
       </el-form-item>
-      <el-form-item label="净资产总额">
-        <el-input v-model="formData.netAssetsTotal" placeholder="请输入" clearable></el-input>
+      <el-form-item label=" ">
+        <el-row>
+          <el-button type="primary" @click="handleAdd()">添加</el-button>
+        </el-row>
       </el-form-item>
-      <el-form-item label="资产总额">
-        <el-input v-model="formData.assetsTotal" placeholder="请输入" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="净利润">
-        <el-input v-model="formData.netProfit" placeholder="请输入" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="营业收入">
-        <el-input v-model="formData.revenue" placeholder="请输入" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="所属年份">
-        <el-input v-model="formData.year" placeholder="请输入" clearable></el-input>
-      </el-form-item>
+      <div v-for="(item, index) in formData.financialInfos" :key="index" class="add-item">
+        <el-form-item label="净资产总额">
+          <el-input v-model="item.netAssetsTotal" placeholder="请输入" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="资产总额">
+          <el-input v-model="item.assetsTotal" placeholder="请输入" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="净利润">
+          <el-input v-model="item.netProfit" placeholder="请输入" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="营业收入">
+          <el-input v-model="item.revenue" placeholder="请输入" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="所属年份">
+          <el-input v-model="item.year" placeholder="请输入" clearable></el-input>
+        </el-form-item>
+        <el-button type="danger" class="del-btn" @click="handleDelete(index, item)">删除</el-button>
+      </div>
     </el-form>
     <template #footer>
       <el-button @click="visible = false">取消</el-button>
@@ -45,7 +54,7 @@ import { ElMessage } from "element-plus";
 const props = defineProps({
   row: {
     type: Object,
-    default: () => {},
+    default: () => { },
   },
   bokeDict: {
     type: Array,
@@ -53,33 +62,39 @@ const props = defineProps({
   },
 });
 const emits = defineEmits(["submitOk"]);
+const defaultItem = () => {
+  return {
+    netAssetsTotal: "",
+    assetsTotal: "",
+    netProfit: 0,
+    revenue: 0,
+    year: 0
+  }
+}
 const loading = ref(false);
 const visible = ref(false);
 const formData = ref({
   companyName: "",
-  certificates: "",
-  assetsTotal: "",
+  companyCode: "",
   liabilitiesTotal: "",
-  netAssetsTotal: "",
-  netProfit: "",
-  revenue: "",
-  year: "",
+  financialInfos: [{ ...defaultItem() }],
 });
 const getInfoBidList = async () => {
   try {
     const res = await getCompanyDetailApi({
-      id: props.row.id,
+      companyCode: props.row.companyCode,
     });
     console.log(res);
 
     if (res.status === 0) {
       formData.value = res.data;
+      formData.value.certificates = res.data.certificates ? res.data.certificates.split(",")?.map(item => Number(item)) : [];
     }
-  } catch (error) {}
+  } catch (error) { }
 };
 const handleOpen = () => {
   visible.value = true;
-  if (props.row?.bidNumber) {
+  if (props.row?.companyCode) {
     getInfoBidList();
   }
 };
@@ -91,8 +106,8 @@ const handleSubmit = async () => {
       certificates: formData.value.certificates.join(","),
     };
     let Api = AddCompanyApi;
-    if (props.row?.bidNumber) {
-      params.bidNumber = props.row.bidNumber;
+    if (props.row?.companyCode) {
+      params.companyCode = props.row.companyCode;
       Api = editCompanyApi;
     }
 
@@ -108,10 +123,10 @@ const handleSubmit = async () => {
   }
 };
 const handleAdd = () => {
-  formData.value.companyQuoteInfoDTOS.push({ ...defaultItem() });
+  formData.value.financialInfos.push({ ...defaultItem() });
 };
 const handleDelete = (index, item) => {
-  formData.value.companyQuoteInfoDTOS.splice(index, 1);
+  formData.value.financialInfos.splice(index, 1);
 };
 </script>
 <style lang="scss" scoped>

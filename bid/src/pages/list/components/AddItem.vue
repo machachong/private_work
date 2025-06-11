@@ -8,6 +8,9 @@
 
   <el-dialog v-model="visible" destroy-on-close :title="row?.bidNumber ? '编辑' : '添加'" width="800px" append-to-body>
     <el-form v-model="formData" label-width="100px">
+      <el-form-item label="项目名称">
+        <el-input v-model="formData.projectName" placeholder="请输入" clearable></el-input>
+      </el-form-item>
       <el-form-item label="标的金额">
         <el-input v-model="formData.bidAmount" placeholder="请输入" clearable></el-input>
       </el-form-item>
@@ -23,8 +26,8 @@
       <template v-if="formData.category === 1">
         <el-form-item label=" ">
           <el-space><span>超过1%</span><el-input-number size="small" style="width: 100px;" v-model="formData.high"
-                             placeholder="请输入"></el-input-number><span>低于1% </span><el-input-number size="small"
-                             v-model="formData.low" placeholder="请输入" style="width: 100px;"></el-input-number>
+              placeholder="请输入"></el-input-number><span>低于1% </span><el-input-number size="small" v-model="formData.low"
+              placeholder="请输入" style="width: 100px;"></el-input-number>
           </el-space>
         </el-form-item>
       </template>
@@ -36,7 +39,12 @@
       <div v-for="(item, index) in formData.companyQuoteInfoDTOS" :key="index" class="add-item">
 
         <el-form-item label="公司名称">
-          <el-input v-model="item.companyName" placeholder="请输入" clearable></el-input>
+          <!-- <el-input v-model="item.companyName" placeholder="请输入" clearable></el-input> -->
+
+          <el-select v-model="item.companyName" filterable allow-create :reserve-keyword="false" placeholder="请选择">
+            <el-option v-for="item in companyList" :key="item.companyName" :label="item.companyName"
+              :value="item.companyName" />
+          </el-select>
         </el-form-item>
         <el-form-item label="报价">
           <el-input v-model="item.quotation" placeholder="请输入" clearable></el-input>
@@ -57,6 +65,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { AddBidListApi, editBidListApi, getInfoBidListApi } from '../api/index'
+import { getCompanyListApi } from '../../company/api/index'
 import { ElMessage } from "element-plus"
 const props = defineProps({
   row: {
@@ -68,6 +77,7 @@ const emits = defineEmits(['submitOk'])
 const defaultItem = () => {
   return {
     companyName: "",
+    projectName:"",
     discount: 0,
     priceScore: 0,
     quotation: 0
@@ -85,6 +95,17 @@ const formData = ref({
     { ...defaultItem() }
   ]
 })
+const companyList = ref([])
+const getCompanyList = async () => {
+  try {
+    const res = await getCompanyListApi()
+    if (res.status === 0) {
+      companyList.value = res.data
+    }
+  } catch (error) {
+
+  }
+}
 const getInfoBidList = async () => {
   try {
     const res = await getInfoBidListApi({
@@ -101,6 +122,7 @@ const getInfoBidList = async () => {
 }
 const handleOpen = () => {
   visible.value = true
+  getCompanyList()
   if (props.row?.bidNumber) {
     getInfoBidList()
   }
