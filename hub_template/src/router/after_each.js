@@ -1,0 +1,11 @@
+import { routeChange } from "@/utils/tracking"
+
+export default function (to) {
+	if (to.meta) {
+		const meta = to.meta
+		const permission_id = meta?.permission
+		if (permission_id) {
+			routeChange(meta.eventName, meta.module || meta.title, permission_id)
+		}
+	}
+}

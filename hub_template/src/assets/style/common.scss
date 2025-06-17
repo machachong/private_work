@@ -1,0 +1,326 @@
+* {
+	padding: 0;
+	margin: 0;
+	font-family: 'puhui-nomal', 'PingFang SC', 'Microsoft Yahei';
+	scrollbar-color: var(--el-scrollbar-bg-color) var(--el-fill-color-light);
+}
+body {
+	background-color: var(--boke-bg-color);
+	font-size: 14px;
+}
+a {
+	color: inherit;
+	text-decoration: none;
+}
+::-webkit-scrollbar,
+.el-dialog__body::-webkit-scrollbar,
+.w-e-scroll::-webkit-scrollbar {
+	width: 8px; /*滚动条宽度*/
+	height: 6px; /*滚动条高度*/
+}
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb,
+.el-dialog__body::-webkit-scrollbar-thumb,
+.w-e-scroll::-webkit-scrollbar-thumb {
+	border-radius: 4px; /*滚动条的背景区域的圆角*/
+	background-color: #909399; /*滚动条的背景颜色*/
+	opacity: 0.3;
+	cursor: pointer;
+	background-color: rgb(144, 147, 153, 0.5);
+	transition: var(--el-transition-duration) background-color;
+	&:hover {
+		background-color: rgb(144, 147, 153, 0.8);
+	}
+}
+
+// 字体 color
+.color-title {
+	color: var(--boke-color-text-title);
+}
+.color-content {
+	color: var(--boke-color-text-content);
+}
+.color-describe {
+	color: var(--boke-color-text-describe);
+}
+.color-success {
+	color: var(--boke-color-success);
+}
+.color-fail {
+	color: var(--boke-color-fail);
+}
+.color-main {
+	color: var(--boke-color-main);
+}
+.hover-main {
+	&:hover {
+		color: var(--boke-color-main);
+	}
+}
+//  padding
+.py-14 {
+	padding: 14px 0;
+}
+.py-16 {
+	padding: 16px 0;
+}
+.px-12 {
+	padding: 0 12px;
+}
+.px-16 {
+	padding: 0 16px;
+}
+.px-20 {
+	padding: 0 20px;
+}
+.px-40 {
+	padding: 0 40px;
+}
+.p-t-4 {
+	padding-top: 4px;
+}
+.p-t-8 {
+	padding-top: 8px;
+}
+.p-t-12 {
+	padding-top: 12px;
+}
+.p-t-16 {
+	padding-top: 16px;
+}
+.p-t-20 {
+	padding-top: 20px;
+}
+.p-t-22 {
+	padding-top: 22px;
+}
+.p-t-24 {
+	padding-top: 24px;
+}
+.p-t-30 {
+	padding-top: 30px;
+}
+.p-t-60 {
+	padding-top: 60px;
+}
+.p-b-12 {
+	padding-bottom: 12px;
+}
+.p-b-22 {
+	padding-bottom: 22px;
+}
+.p-l-6 {
+	padding-left: 6px;
+}
+.p-l-12 {
+	padding-left: 12px;
+}
+.p-l-16 {
+	padding-left: 16px;
+}
+.p-l-20 {
+	padding-left: 20px;
+}
+.p-l-110 {
+	padding-left: 110px;
+}
+// margint值
+.m-l-8 {
+	margin-left: 8px;
+}
+.m-l-16 {
+	margin-left: 16px;
+}
+.m-l-20 {
+	margin-left: 20px;
+}
+.m-r-4 {
+	margin-right: 4px;
+}
+.m-t-8 {
+	margin-top: 8px;
+}
+.m-t-10 {
+	margin-top: 10px;
+}
+.m-t-12 {
+	margin-top: 12px;
+}
+.m-t-16 {
+	margin-top: 16px;
+}
+.m-t-18 {
+	margin-top: 18px;
+}
+.m-t-20 {
+	margin-top: 20px;
+}
+.m-t-30 {
+	margin-top: 20px;
+}
+.m-t-40 {
+	margin-top: 20px;
+}
+.m-r-10 {
+	margin-right: 10px;
+}
+// border radius
+.border-r-24 {
+	border-radius: 24px;
+}
+// fonts size
+.f-s-12 {
+	font-size: 12px;
+}
+.f-s-13 {
+	font-size: 13px;
+}
+.f-s-14 {
+	font-size: 14px;
+}
+.f-s-16 {
+	font-size: 16px;
+}
+.f-s-18 {
+	font-size: 18px;
+}
+.f-s-24 {
+	font-size: 24px;
+}
+.f-s-30 {
+	font-size: 30px;
+}
+.f-s-48 {
+	font-size: 48px;
+}
+// font-weight
+.f-w-400 {
+	font-weight: 400;
+}
+.f-w-500 {
+	font-weight: 500;
+}
+.f-w-600 {
+	font-weight: 600;
+}
+.f-w-700 {
+	font-weight: 700;
+}
+
+// line-height
+.line-h-18 {
+	line-height: 18px;
+}
+.line-h-20 {
+	line-height: 20px;
+}
+.line-h-70 {
+	line-height: 70px;
+}
+//width
+.w-100p {
+	width: 100%;
+}
+.w-350 {
+	width: 350px;
+}
+.w-250 {
+	width: 250px;
+}
+.w-200 {
+	width: 200px;
+}
+.w-160 {
+	width: 160px;
+}
+// flex
+.flex-middle {
+	display: flex;
+	align-items: center;
+}
+.flex-around {
+	@extend .flex-middle;
+	justify-content: space-between;
+}
+
+// transform
+.rotate-90 {
+	transform: rotate(90deg);
+}
+
+// 飞书卡片 more组件样式
+.lark-more-content {
+	border-radius: 6px;
+	box-sizing: border-box;
+	min-width: 250px;
+	max-height: 172px;
+	padding: 5px 8px;
+	margin: 0 4px;
+	width: 100%;
+	border-radius: 4px;
+	color: #1f2329;
+	line-height: 22px;
+	cursor: pointer;
+	&:hover {
+		background-color: rgba(31, 35, 41, 0.08);
+	}
+}
+.report-card {
+	background: var(--boke-board-bg);
+	border-radius: 10px;
+	padding: 14px;
+}
+
+//搜索列表自定义字段栏样式
+.operation-area {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	padding-right: 20px;
+	box-sizing: border-box;
+	.column-operations {
+		display: flex;
+		flex-flow: row;
+		.column-operation__title {
+			font-size: 12px;
+			font-weight: bold;
+			line-height: 30px;
+		}
+	}
+}
+// 搜索列表搜索栏样式
+.node-search {
+	background-color: var(--boke-card-bg);
+	text-align: left;
+	.node-search-form {
+		padding-left: 0;
+	}
+}
+
+.one-line {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.table-link {
+	width: 100%;
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--boke-color-main);
+	cursor: pointer;
+}
+.two-line {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	line-clamp: 2;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+	/*! autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+.pointer {
+	cursor: pointer;
+}

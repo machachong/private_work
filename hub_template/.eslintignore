@@ -1,0 +1,11 @@
+/dist/*
+/node_modules/**
+.local
+.output.js
+**/*.svg
+**/*.sh
+/public/
+/boke-ui/
+/src/assets/iconfont/*
+/src/assets/iconfont_color/*
+/src/vite-env.d.ts

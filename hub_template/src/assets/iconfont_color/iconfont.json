@@ -1,0 +1,93 @@
+{
+  "id": "4459191",
+  "name": "数据平台重置-彩色",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "9400610",
+      "name": "飞书",
+      "font_class": "feishu",
+      "unicode": "e68e",
+      "unicode_decimal": 59022
+    },
+    {
+      "icon_id": "30674681",
+      "name": "品牌标识_网易邮箱-copy",
+      "font_class": "pinpaibiaoshi_wangyiyouxiang",
+      "unicode": "e698",
+      "unicode_decimal": 59032
+    },
+    {
+      "icon_id": "39534636",
+      "name": "计算模型",
+      "font_class": "jisuanmoxing",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "39534638",
+      "name": "数据详情",
+      "font_class": "shujuxiangqing",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "39534645",
+      "name": "结构化数据",
+      "font_class": "jiegouhuashuju",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "39534649",
+      "name": "注册用户",
+      "font_class": "zhuceyonghu",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "39534650",
+      "name": "网络接口",
+      "font_class": "wangluojiekou",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "12184796",
+      "name": "标记",
+      "font_class": "biaoji3",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "4826354",
+      "name": "已读",
+      "font_class": "yidu",
+      "unicode": "ea96",
+      "unicode_decimal": 60054
+    },
+    {
+      "icon_id": "4893438",
+      "name": "通知",
+      "font_class": "tongzhi",
+      "unicode": "e693",
+      "unicode_decimal": 59027
+    },
+    {
+      "icon_id": "9577560",
+      "name": "开发平台",
+      "font_class": "kaifapingtai",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "9132001",
+      "name": "分类",
+      "font_class": "quanbu",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    }
+  ]
+}
